@@ -1,42 +1,75 @@
+const mongo = require('mongodb');
 
-let MEMBERS = [
-    {name: {first: "Slava", last: "Radune"}, id: "0", rank: 'Dan 2', groups: ["1", "2"],
-        payments: [{key: 'September', paid: true}, {key: 'October', paid: true}]},
-    {name: {first: "Diana", last: "Radune"}, id: "1", rank: 'Dan 1', groups: ["1"],
-        payments: [{key: 'September', paid: true}, {key: 'October', paid: false}]},
-    {name: {first: "Artiom", last: "Radune"}, id: "2", rank: 'Dan 2', groups: ["2"],
-        payments: [{key: 'September', paid: true}, {key: 'October', paid: true}, {key: 'November', paid: false}]},
-];
+const DATABASE = {
+    DB_URL: 'mongodb+srv://admin:shinkyokushin@shinkyokushin-champ-knlct.mongodb.net/championship',
+    DB: 'karate-master',
+    MEMBERS: 'members',
+};
 
-function getDataById(dataBase, id) {
-    for (let doc in dataBase) {
-        if (dataBase[doc].id === id) {
-            return dataBase[doc];
-        }
-    }
+let db;
+let dbo;
+
+const dbConnect = function () {
+    mongo.MongoClient.connect(DATABASE.DB_URL, function(err, database) {
+        db = database;
+        dbo = db.db(DATABASE.DB);
+    });
+};
+
+const dbDisconnect = function () {
+    db.close();
+};
+
+////////////////// PRIVATE //////////////////////
+function addDocument(collection, data, success) {
+    dbo.collection(collection)
+        .insertOne(data,
+            function(err, res) {
+                if (err) throw err;
+                let result = {isOk: true, message: "User created successfully"};
+                success(result);
+            });
 }
 
-function getNextId(dataBase) {
-    let maxId = 0;
-    for (let doc in dataBase) {
-        if (+dataBase[doc].id > maxId) {
-            maxId = +dataBase[doc].id;
-        }
+
+function getData(collection, success, query) {
+    if (!query) {
+        query = {};
     }
-    return "" + (maxId + 1);
+    dbo.collection(collection)
+        .find(query).toArray(function(err, res) {
+        if (err) throw err;
+        success(res);
+    });
 }
 
-function getMembers() {
-    return MEMBERS;
+//
+
+//
+// function getDataById(dataBase, id) {
+//     for (let doc in dataBase) {
+//         if (dataBase[doc].id === id) {
+//             return dataBase[doc];
+//         }
+//     }
+// }
+
+
+///////////////////// PUBLIC ///////////////
+function getMembers(success) {
+    getData(DATABASE.MEMBERS, success);
 }
 
 function getMember(id) {
-    return getDataById(MEMBERS, id);
+    getData(DATABASE.MEMBERS, success, {id: mongo.ObjectId(id)});
 }
 
-function addMember(member) {
-    member.id = getNextId(MEMBERS);
-    MEMBERS.push(member);
+function addManyMembers(members, success) {
+    addDocuments(DATABASE.MEMBERS, members, success);
+}
+
+function addMember(member, success) {
+    addDocument(DATABASE.MEMBERS, member, success);
 }
 
 function changeMember(member) {
@@ -62,9 +95,12 @@ function setPayment(id, month, value) {
 
 
 module.exports = {
+    dbConnect,
+    dbDisconnect,
     getMembers,
     getMember,
     addMember,
+    addManyMembers,
     changeMember,
     getPayments,
     setPayment,

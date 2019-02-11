@@ -9,8 +9,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
     let body = req.body;
-    db.addMember(body);
-    res.send({isOk: true});
+    db.addMember(body, function (result) {
+        res.send(result);
+    });
 });
 
 module.exports = router;

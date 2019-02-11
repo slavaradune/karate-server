@@ -9,7 +9,9 @@ let memberProfileRouter = require('./routes/memberProfile');
 let memberPaymentsRouter = require('./routes/memberPayments');
 let eventsRouter = require('./routes/events');
 let eventInfoRouter = require('./routes/eventInfo');
+let db = require('./db/db');
 
+db.dbConnect();
 let app = express();
 
 // view engine setup

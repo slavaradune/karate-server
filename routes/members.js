@@ -4,7 +4,9 @@ var router = express.Router();
 
 
 router.get('/', function(req, res, next) {
-    res.send({results: db.getMembers()});
+    db.getMembers(function (result) {
+        res.send({results: result});
+    });
 });
 
 module.exports = router;
