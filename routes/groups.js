@@ -1,17 +1,15 @@
 let express = require('express');
 let router = express.Router();
-let db = require('../db/dbPayments');
+let db = require('../db/dbMembers');
 
 router.get('/', function(req, res, next) {
-    let id = req.query.id;
-    db.getPayments(id, function (result) {
+    db.getGroups(function (result) {
         res.send({result: result});
     });
 });
 
 router.post('/', function(req, res, next) {
-    let body = req.body;
-    db.setPayment(body.id, body.key, body.value, function (result) {
+    db.addGroup(req.body, function (result) {
         res.send(result);
     });
 });

@@ -1,11 +1,19 @@
-let db = require("../db/db");
+let db = require("../db/dbMembers");
 const mongo = require('mongodb');
 
 const DATABASE = {
     DB_URL: 'mongodb+srv://admin:shinkyokushin@shinkyokushin-champ-knlct.mongodb.net/championship',
     DB: 'karate-master',
     MEMBERS: 'members',
+    EVENTS: 'events',
 };
+
+const EVENTS = [
+    {startDate: new Date("10/01/2019"), endDate: new Date("11/01/2019"), name: "Marathon 26 hours"},
+    {startDate: new Date("10/02/2019"), endDate: new Date("10/02/2019"), name: "Championship"},
+    {startDate: new Date("02/01/2019"), endDate: new Date("02/01/2019"), name: "Camp"},
+
+];
 
 let MEMBERS = [
     {name: {first: "Slava", last: "Radune"}, id: "0", rank: 'Dan 2', groups: ["1", "2"],
@@ -32,4 +40,4 @@ function addDocuments(collection, data) {
 }
 
 
-addDocuments(DATABASE.MEMBERS, MEMBERS);
+addDocuments(DATABASE.EVENTS, EVENTS);
