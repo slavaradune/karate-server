@@ -9,6 +9,8 @@ let membersRouter = require('./routes/members');
 let memberPaymentsRouter = require('./routes/memberPayments');
 let eventsRouter = require('./routes/events');
 let imagesRouter = require('./routes/images');
+let groupsRouter = require('./routes/groups');
+let pricingRouter = require('./routes/pricing');
 let db = require('./db/common');
 
 db.dbConnect();
@@ -29,6 +31,8 @@ app.use('/members', membersRouter);
 app.use('/memberPayments', memberPaymentsRouter);
 app.use('/events', eventsRouter);
 app.use('/images', imagesRouter);
+app.use('/groups', groupsRouter);
+app.use('/pricing', pricingRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

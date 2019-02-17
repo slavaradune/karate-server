@@ -1,6 +1,6 @@
 const mongo = require('mongodb');
 const dbCommon = require('./common');
-
+const dbPayments = require('./dbPayments');
 ////////////////// PRIVATE //////////////////////
 
 
@@ -15,12 +15,13 @@ function getMember(id, success) {
 }
 
 function addMember(member, success) {
-    dbCommon.addDocument(dbCommon.DATABASE.MEMBERS, member, success);
+    dbPayments.updateDefaultPayment(member, newMember => {
+        dbCommon.addDocument(dbCommon.DATABASE.MEMBERS, newMember, success);
+    });
 }
 
 function changeMember(member, success) {
-    dbCommon.changeData(dbCommon.DATABASE.MEMBERS, {'_id': mongo.ObjectId(member._id)}, member, success);
-
+    dbCommon.changeData(dbCommon.DATABASE.MEMBERS, member, success);
 }
 
 
